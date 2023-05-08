@@ -4,8 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "reset-database": "node ./databases/createDatabase.js delete_mode",
-    "create-database": "node ./databases/createDatabase.js"
+    "reset-database": "node ./database/createDatabase.js delete_mode",
+    "create-database": "node ./database/createDatabase.js"
   },
   "keywords": [],
   "author": "",

@@ -2,6 +2,8 @@ import express from "express"
 import dotnev from "dotenv"
 import cors from "cors"
 import session from "express-session";
+import rateLimit from 'express-rate-limit'
+
 
 const app = express();
 app.use(express.json());
@@ -14,49 +16,48 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: false } 
 }));
-// app.use(cors({
-//     credentials: true,
-//     origin: true
-// }));
-app.use(cors())
+app.use(cors({
+    credentials: true,
+    origin: true
+}));
 
-import rateLimit from 'express-rate-limit'
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
 	max: 10, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
-// app.use("/login", limiter);
+app.use("/login", limiter);
 
 
-export function isAutheticated(req, res, next){
-    if(req.session && req.session.user){
+
+export function isAuthenticated (req, res, next) {
+    if (req.session && req.session.user) {
         next();
     } else {
-        res.redirect("/login")
+        res.redirect('/login');
     }
 }
 
-// import loginRouter from "./routers/loginRouter.js";
-// app.use(loginRouter);
+import loginRouter from "./routers/loginRouter.js";
+app.use(loginRouter);
 
-// import userRouter from "./routers/usersRouter.js";
-// app.use(userRouter);
-
-
-// import singupRouter from "./routers/singupRouter.js";
-// app.use(singupRouter);
-
-// import homeRouter from "./routers/homeRouter.js";
-// app.use(homeRouter);
+import userRouter from "./routers/usersRouter.js";
+app.use(userRouter);
 
 
-// import logoutRouter from "./routers/logoutRouter.js";
-// app.use(logoutRouter);
+import singupRouter from "./routers/singupRouter.js";
+app.use(singupRouter);
 
-// import contactRouter from "./routers/contactRouter.js"
-// app.use(contactRouter)
+import homeRouter from "./routers/homeRouter.js";
+app.use(homeRouter);
+
+
+import logoutRouter from "./routers/logoutRouter.js";
+app.use(logoutRouter);
+
+import contactRouter from "./routers/contactRouter.js"
+app.use(contactRouter)
 
 
 

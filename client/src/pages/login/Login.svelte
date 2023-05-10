@@ -1,7 +1,8 @@
 <script>
     import { useNavigate } from 'svelte-navigator'
     import { user } from '../../stores/userStore.js';
-    import Toastr from 'toastr'
+    import toast, { Toaster } from 'svelte-french-toast';
+
     const navigate = useNavigate();
 
 
@@ -27,10 +28,11 @@
       navigate("/home");
     } else {
       const error = await response.json();
-      Toastr.error(error.message);
+      toast.error(error.message);
     }
   } catch (error) {
-    Toastr.error(`Unable to login. Try again later. ${error}`);
+    toast.error(error);
+
   }
 }
 
@@ -38,6 +40,7 @@
     
 </script>
 
+<Toaster />
 
 
     <form on:submit|preventDefault={handleSubmit} class="login">
@@ -119,4 +122,5 @@ label{
 
 
 }
+
 </style>

@@ -11,3 +11,4 @@ user.subscribe(value => {
   // Update the local storage with the new value of the user store
   localStorage.setItem('user', JSON.stringify(value));
 });
+

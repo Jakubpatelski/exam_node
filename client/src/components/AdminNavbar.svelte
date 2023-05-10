@@ -25,9 +25,9 @@
             const json = await response.json()
             Toastr.warning(json.message)
             }
-            } catch {
-                Toastr.error('Unable to logout. Please try again later.')
-            }
+    } catch {
+        Toastr.error('Unable to logout. Please try again later.')
+    }
 }
 
 
@@ -37,15 +37,13 @@
 <Router>
     <nav>
         <div class="nav_text" id="notes">
-            <Link to="/home">Home</Link>
-            <Link to="/contact">Contact</Link>
+            <Link to="/admin">Admin</Link>
+
+            <Link to="/admin/users">Users</Link>
         </div>
        
-        {#if  $user.message.admin}
-        <Link to="/admin"><button class="btn admin">Admin Panel</button>
-        </Link>
+        <Link to="/home"><button class="btn admin">Home</button></Link>
 
-        {/if}
         <!-- <Link to="/contact"><button class="logout-button">Logout</button></Link> -->
         <button on:click={logout} class="btn logout">Logout</button>
 
@@ -66,7 +64,7 @@
     nav {
         display: flex;
         align-items: center;
-        background-color: #1A81F4;
+        background-color: blueviolet;
         height: 90px;
         padding: 20px;
         margin: 0; /* Add this line to remove the margin */
@@ -74,7 +72,7 @@
     }
 
     .admin{
-        background-color: blueviolet;
+        background-color: #1A81F4;
         margin-right: 20px;
         
     }

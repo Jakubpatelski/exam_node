@@ -6,7 +6,8 @@
   import Contact from "./pages/contact/Contact.svelte";
   import Singup from "./pages/signup/Singup.svelte";
   import PrivateRoute from "./components/PrivateRoute.svelte";
-    import Admin from "./pages/admin/Admin.svelte";
+  import Admin from "./pages/admin/Admin.svelte";
+  import Users from "./pages/users/Users.svelte";
 
 
 </script>
@@ -23,6 +24,9 @@
       </PrivateRoute>
       <PrivateRoute path="/admin" let:location>
         <Admin />
+      </PrivateRoute>
+      <PrivateRoute path="/admin/users" let:location>
+        <Users />
       </PrivateRoute>
       <Route path="/singup"><Singup /></Route>
     </div>

@@ -34,6 +34,7 @@
 
     }
 </script>
+
 <form on:submit|preventDefault={singup} class="login">
     <h1>Login</h1>
     <label>

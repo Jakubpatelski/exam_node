@@ -1,5 +1,5 @@
 <script>
-    import { Router, Link, useNavigate } from 'svelte-navigator'
+    import { Router, Link, useNavigate, link } from 'svelte-navigator'
     import { user } from '../stores/userStore';
     import * as Toastr from 'toastr'
 
@@ -40,11 +40,11 @@
             <Link to="/admin">Admin</Link>
 
             <Link to="/admin/users">Users</Link>
+            <Link to="/admin/players">Players</Link>
         </div>
        
         <Link to="/home"><button class="btn admin">Home</button></Link>
 
-        <!-- <Link to="/contact"><button class="logout-button">Logout</button></Link> -->
         <button on:click={logout} class="btn logout">Logout</button>
 
     </nav>

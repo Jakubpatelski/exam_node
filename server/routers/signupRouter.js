@@ -4,7 +4,7 @@ import db from "../database/connection.js";
 
 const router = Router()
 
-router.post("/singup", async (req, res) => {
+router.post("/signup", async (req, res) => {
     const { email, username, password, admin } = req.body;
 
      // Validate the required fields 

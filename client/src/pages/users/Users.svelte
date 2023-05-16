@@ -19,29 +19,32 @@
     });
   
     async function getUsers() {
-      const response = await fetch("http://localhost:8080/api/users", {
-        credentials: "include"
-      });
-  
+      const response = await fetch("http://localhost:8080/api/users");
       const { data } = await response.json();
       users = data;
       console.log(users);
     }
   
     async function deleteUser(userId) {
+        const user = users.find(a => a.id === userId)
+        const confirmDelete = confirm(`Are you sure you want to delete user ${user.username}?`);
+
+      if(confirmDelete){
       const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
         method: "DELETE",
         credentials: "include"
       });
+    
   
       if (response.ok) {
-        const user = users.find(a => a.id === userId)
         toast.success(`${user.username} deleted`)
         await getUsers(); // Refresh the user list after deletion
       } else {
         toast.error("Error")
       }
     }
+}
+
 
     async function updateUser(userId){
       
@@ -99,10 +102,8 @@
       width: 280px;
       display: inline-block;
       margin: 30px;
-      vertical-align: top;
       border-radius: 10px;
       background-image: linear-gradient(180deg, #A9C9FF 0%, #FFBBEC 100%);
-
     }
 
     button {

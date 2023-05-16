@@ -1,6 +1,7 @@
 <script>
-    import { Router, Link, useNavigate, navigate } from 'svelte-navigator'
-    import Toastr from 'toastr'
+    import { navigate } from 'svelte-navigator'
+    import toast, { Toaster } from 'svelte-french-toast';
+
 
 
     let email = ""
@@ -9,7 +10,7 @@
     let admin = false 
 
 
-    async function singup() {
+    async function signUp() {
       const data = { email, username, password, admin };
       try {
         const response = await fetch('http://localhost:8080/singup', {
@@ -21,21 +22,22 @@
         });
 
         if(response.ok){
-          Toastr.info(`User created`);
+          toast.success(`User created`);
           navigate("/");
         } else {
         const error = await response.json()
-        Toastr.error(error.message);
+        toast.error(error.message);
       }
       } 
       catch (error) {
-      Toastr.error(`Unable to signup. Try again later. ${error}`);
+      toast.error(`Unable to signup. Try again later. ${error}`);
   }
 
     }
 </script>
+<Toaster />
 
-<form on:submit|preventDefault={singup} class="login">
+<form on:submit|preventDefault={signUp} class="login">
     <h1>Login</h1>
     <label>
         email:

@@ -5,6 +5,7 @@ import session from "express-session";
 import rateLimit from 'express-rate-limit'
 
 
+
 const app = express();
 app.use(express.json());
 
@@ -14,7 +15,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false, 
     saveUninitialized: true,
-    cookie: { secure: false } 
+    cookie: { secure: false } //i run on http so should be false
 }));
 app.use(cors({
     credentials: true,
@@ -23,7 +24,7 @@ app.use(cors({
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
-	max: 10, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	max: 10, // Limit each IP to 10 requests per `window` (here, per 15 minutes)
 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
@@ -46,8 +47,8 @@ import userRouter from "./routers/usersRouter.js";
 app.use(userRouter);
 
 
-import singupRouter from "./routers/singupRouter.js";
-app.use(singupRouter);
+import signupRouter from "./routers/signupRouter.js";
+app.use(signupRouter);
 
 import homeRouter from "./routers/homeRouter.js";
 app.use(homeRouter);
@@ -58,6 +59,8 @@ app.use(logoutRouter);
 
 import contactRouter from "./routers/contactRouter.js"
 app.use(contactRouter)
+import playerRouter from "./routers/playersRouter.js"
+app.use(playerRouter)
 
 
 

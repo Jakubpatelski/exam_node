@@ -23,7 +23,7 @@
       background-color: white;
       max-width: 50vw;
       padding: 1rem;
-      margin: 15% auto;
+      margin: 5% auto;
       border-radius: 10px;
     }
     .close {

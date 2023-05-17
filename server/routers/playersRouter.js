@@ -22,9 +22,6 @@ const storage = multer.diskStorage({
   const upload = multer({ storage });
   
 
-  
-
-
 router.get("/api/players", async (req, res) => {
     const [result] = await db.execute("SELECT id, first_name, last_name, country, date_of_birth, league, img FROM players;");
     const players = result.map((player) => {
@@ -79,7 +76,8 @@ router.get("/api/players/:id", async (req, res) => {
   // Create a player
 router.post("/api/players", upload.single("img"), async (req, res) => {
     const { firstName, lastName, country, dateOfBirth, league } = req.body;
-    const imgPath = req.file ? req.file.filename : null;
+    const imgPath = req.file ? req.file.filename : '/favicon/favicon.png';
+
   
     try {
        
@@ -95,6 +93,36 @@ router.post("/api/players", upload.single("img"), async (req, res) => {
       res.status(500).send({ error: 'Failed to create player' });
     }
   });
+
+  // Update a player by ID
+router.put("/api/players/:id", upload.single("img"), async (req, res) => {
+  const playerId = req.params.id;
+  const { firstName, lastName, country, dateOfBirth, league } = req.body;
+  const imgPath = req.file ? req.file.filename : null;
+
+  try {
+    // Get the previous image path of the player
+    const [prevPlayer] = await db.execute('SELECT img FROM players WHERE id = ?', [playerId]);
+    const prevImgPath = prevPlayer[0].img;
+
+    // Update the player information in the database
+    const result = await db.execute(
+      'UPDATE players SET first_name = ?, last_name = ?, country = ?, date_of_birth = ?, league = ?, img = ? WHERE id = ?',
+      [firstName, lastName, country, dateOfBirth, league, imgPath || prevImgPath, playerId]
+    );
+
+    // Delete the previous image if a new image is uploaded
+    if (imgPath && prevImgPath) {
+      const imagePath = `../client/public', prevImgPath${prevImgPath}`;
+      fs.unlinkSync(imagePath);
+    }
+
+    res.status(200).send({ message: `Player with ID ${playerId} updated` });
+  } catch (error) {
+    console.error('Failed to update player:', error);
+    res.status(500).send({ error: 'Failed to update player' });
+  }
+});
   
 
 // Delete a player by ID
@@ -106,8 +134,8 @@ router.delete("/api/players/:id", async (req, res) => {
       const [player] = await db.execute('SELECT img FROM players WHERE id = ?', [playerId]);
       const imgPath = player[0].img;
   
-      if (imgPath) {
-        const imagePath = path.join('../client/public', imgPath);
+      if (imgPath  && imgPath !== '/favicon/favicon.png') {
+        const imagePath = `../client/public/${imgPath}`;
         fs.unlinkSync(imagePath);
       }
   

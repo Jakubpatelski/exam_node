@@ -54,7 +54,7 @@
           <input type="password" bind:value={password} />
         </label>
         <button type="submit" class="btn">Sign Up</button>
-        <a href="/singup"> <p>Don't have an account?</p></a>
+        <a href="/signup"> <p>Don't have an account?</p></a>
       </form>
 
  

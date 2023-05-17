@@ -1,6 +1,13 @@
 <script>
     import Modal from './Modal.svelte';
+    import toast, { Toaster } from 'svelte-french-toast';
+
+    export let refresh;
+
+
+
     let modal;
+
 
     let formData = {};
     async function addPlayer(event) {
@@ -20,20 +27,20 @@
             if (response.ok) {
             const result = await response.json();
             console.log('Player created:', result);
-            // Handle success response
+            toast.success(`Player was created`)
             } else {
-            throw new Error('Failed to create player');
-            }
+              toast.error('Error');
+          }
         } catch (error) {
-            console.error('Failed to create player:', error);
+          toast.error(error)
             // Handle error response
         }
 }
 
   </script>
-
 <button class="add-player-button" on:click={() => modal.show()}>Add Player</button>
     <Modal bind:this={modal}>
+      <div class="form-container">
         <h4>Player Form</h4>
         <form on:submit={addPlayer} enctype="multipart/form-data">
           <div>
@@ -51,7 +58,6 @@
           <div>
             <label for="dateOfBirth">Date of Birth:</label>
             <input type="date" id="dateOfBirth" name="dateOfBirth" bind:value={formData.dateOfBirth} placeholder="">
-            
           </div>
           <div>
             <label for="league">League:</label>
@@ -61,24 +67,83 @@
             <label for="img">Image:</label>
             <input type="file" id="img" name="img" bind:files={formData.img}>
           </div>
-          <button type="submit">Submit</button>
+          <div class="button-wrapper">
+            <button type="submit" class="submit-button">Submit</button>
+            <button on:click={refresh} on:click={() => modal.hide()} class="close-button">Close</button>
+          </div>
+      
         </form>
-      <button on:click={() => modal.hide()}>Close</button>
+      </div>
     </Modal>
 
-    <style>
-        .add-player-button {
-           margin-top: 10px;
-           right: 30px;
-           background-color: #4a9d50;
-           color: white;
-           font-size: 16px;
-           padding: 10px 20px;
-           position: fixed;
-           cursor: pointer;
-           border-radius: 8px;
-           border: none;
-           transition: background-color 0.3s;
+  <style>
+    .add-player-button {
+      margin-top: 10px;
+      right: 30px;
+      background-color: #4a9d50;
+      color: white;
+      font-size: 20px;
+      padding: 15px 25px;
+      position: fixed;
+      cursor: pointer;
+      border-radius: 8px;
+      border: none;
         
-        }
-     </style>
+   }
+
+   .add-player-button:hover {
+    background-color: #0b5810;
+   }
+
+  .form-container {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .form-container h4 {
+    margin-bottom: 20px;
+  }
+
+  .form-container label {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .form-container input,
+  .form-container button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+
+  .form-container .button-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .form-container button.submit-button {
+    width: 48%; /* Adjusted width to accommodate both buttons */
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+  }
+
+  .form-container button.submit-button:hover {
+    background-color: #45a049;
+  }
+
+  .form-container button.close-button {
+    width: 48%; /* Adjusted width to match the submit button */
+    background-color: #f44336;
+    color: white;
+    cursor: pointer;
+  }
+
+  .form-container button.close-button:hover {
+    background-color: #d32f2f;
+  }
+</style>
+

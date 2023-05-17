@@ -13,7 +13,7 @@
     async function signUp() {
       const data = { email, username, password, admin };
       try {
-        const response = await fetch('http://localhost:8080/singup', {
+        const response = await fetch('http://localhost:8080/signup', {
           method: 'Post',
           headers: {
             'Content-Type': 'application/json'

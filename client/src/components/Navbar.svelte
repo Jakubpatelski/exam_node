@@ -1,34 +1,30 @@
 <script>
     import { Router, Link, useNavigate } from 'svelte-navigator'
     import { user } from '../stores/userStore';
-    import * as Toastr from 'toastr'
+    import toast, { Toaster } from 'svelte-french-toast';
+
 
     const navigate = useNavigate()
 
-
-
-   
     async function logout()  {
-        try {
-            const response = await fetch("http://localhost:8080/logout", {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-                }
-            })
-            if(response.ok){
-            navigate('/')
-            user.set(null)
-            localStorage.removeItem("user")
-            } else {
-            const json = await response.json()
-            Toastr.warning(json.message)
+
+        const response = await fetch("http://localhost:8080/logout", {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
             }
-            } catch {
-                Toastr.error('Unable to logout. Please try again later.')
-            }
-}
+        })
+        if(response.ok){
+        navigate('/');
+        user.set(null);
+        localStorage.removeItem("user");  
+        toast('See You Later!', {
+        icon: '👋',});
+        } else {
+        toast.error("error")
+        }
+    }
 
 
 

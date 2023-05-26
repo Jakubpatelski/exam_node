@@ -49,7 +49,7 @@
     async function updateUser(userId){
       
         const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
-            method: "PUT",
+            method: "PATCH",
             credentials: "include"
         });
 

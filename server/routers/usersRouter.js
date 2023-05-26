@@ -5,12 +5,13 @@ const router = Router();
 
 
 router.get("/api/users", async (req, res) => {
-    const [result] = await db.execute("SELECT id, username, email, admin FROM users;");
+    const [result] = await db.execute("SELECT id, username, email, password, admin FROM users;");
     const users = result.map((user) => ({
       id: user.id,
       username: user.username,
       email: user.email,
-      admin: user.admin,
+      password: user.password,
+      admin: user.admin
     }));
   
     res.send({ data: users });
@@ -40,7 +41,7 @@ try{
  }
 });
 
-router.put("/api/users/:id/", async (req, res) => {
+router.patch("/api/users/:id/", async (req, res) => {
   const userId = req.params.id;
 
   try {

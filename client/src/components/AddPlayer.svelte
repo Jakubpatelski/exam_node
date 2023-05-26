@@ -3,9 +3,6 @@
     import toast, { Toaster } from 'svelte-french-toast';
 
     export let refresh;
-
-
-
     let modal;
 
 
@@ -44,12 +41,12 @@
         <h4>Player Form</h4>
         <form on:submit={addPlayer} enctype="multipart/form-data">
           <div>
-            <label for="firstName">First Name:</label>
-            <input type="text" id="firstName" name="firstName" required bind:value={formData.firstName}>
+            <label for="firstName">Name:</label>
+            <input type="text" id="name" name="firstName" required bind:value={formData.name}>
           </div>
           <div>
-            <label for="lastName">Last Name:</label>
-            <input type="text" id="lastName" name="lastName" required bind:value={formData.lastName}>
+            <label for="position">Position:</label>
+            <input type="text" id="position" name="position" required bind:value={formData.position}>
           </div>
           <div>
             <label for="country">Country:</label>
@@ -75,6 +72,7 @@
         </form>
       </div>
     </Modal>
+
 
   <style>
     .add-player-button {

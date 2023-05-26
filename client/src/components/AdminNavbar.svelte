@@ -37,15 +37,12 @@
 <Router>
     <nav>
         <div class="nav_text" id="notes">
-            <Link to="/admin">Admin</Link>
-
             <Link to="/admin/users">Users</Link>
             <Link to="/admin/players">Players</Link>
         </div>
        
-        <Link to="/home"><button class="btn admin">Home</button></Link>
-
-        <button on:click={logout} class="btn logout">Logout</button>
+        <Link to="/home"><button class="btn admin">User Panel</button></Link>
+       <button on:click={logout} class="btn logout">Logout</button>
 
     </nav>
 </Router>
@@ -53,12 +50,6 @@
 <style>
     * {
         box-sizing: border-box;
-    }
-
-    body {
-    margin: 0;
-    font-family: Inter, sans-serif;
-    height: 100vh;
     }
 
     nav {

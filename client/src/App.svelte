@@ -4,10 +4,10 @@
   import Home from "./pages/home/Home.svelte";
   import Contact from "./pages/contact/Contact.svelte";
   import PrivateRoute from "./components/PrivateRoute.svelte";
-  import Admin from "./pages/admin/Admin.svelte";
   import Users from "./pages/users/Users.svelte";
   import PlayersAdmin from './pages/players/PlayersAdmin.svelte';
   import Signup from './pages/signup/Signup.svelte';
+  import PlayersUser from './pages/players/PlayersUser.svelte';
 
 
 </script>
@@ -21,10 +21,7 @@
       </PrivateRoute>
       <PrivateRoute path="/contact" let:location>
         <Contact />
-      </PrivateRoute>
-      <PrivateRoute path="/admin" let:location>
-        <Admin />
-      </PrivateRoute>
+      </PrivateRoute>  
       <PrivateRoute path="/admin/users" let:location>
         <Users />
       </PrivateRoute>
@@ -34,6 +31,10 @@
       <Route path="/signup">
         <Signup />
       </Route>
+      <Route path="/players">
+        <PlayersUser />
+      </Route>
+     
       <Route path="/*">
         <Login />
       </Route>

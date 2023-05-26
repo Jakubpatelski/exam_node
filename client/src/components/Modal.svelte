@@ -6,8 +6,7 @@
     export function hide() {
       shown = false;
     }
-  </script>
-  
+  </script> 
   <style>
     .modal-wrapper {
       background-color: rgb(0, 0, 0);
@@ -17,6 +16,8 @@
       height: 100%;
       top: 0;
       left: 0;
+      overflow-y: auto; /* Enable vertical scrolling */
+
     }
   
     .modal {

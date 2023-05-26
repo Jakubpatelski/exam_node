@@ -22,17 +22,20 @@ const storage = multer.diskStorage({
   const upload = multer({ storage });
   
 
+
 router.get("/api/players", async (req, res) => {
-    const [result] = await db.execute("SELECT id, first_name, last_name, country, date_of_birth, league, img FROM players;");
+    const [result] = await db.execute("SELECT id, name, position, country, date_of_birth, league, value, description, img FROM players;");
     const players = result.map((player) => {
         // Convert date to the "YYYY-MM-DD" format
      const dateOfBirth = player.date_of_birth.toISOString().split("T")[0];
       return {
         id: player.id,
-        firstName: player.first_name,
-        lastName: player.last_name,
+        name: player.name,
+        position: player.position,
         country: player.country,
         league: player.league,
+        value: player.value,
+        description: player.description,
         dateOfBirth: dateOfBirth,
         imgPath: player.img
       };
@@ -47,7 +50,7 @@ router.get("/api/players/:id", async (req, res) => {
     try {
 
       const [result] = await db.execute(
-        'SELECT id, first_name, last_name, country, date_of_birth, league, img FROM players WHERE id = ?',
+        'SELECT id, name, position, country, date_of_birth, league, value, description, img FROM players WHERE id = ?',
         [playerId]
       );
 
@@ -57,11 +60,13 @@ router.get("/api/players/:id", async (req, res) => {
   
         res.send({
           id: player.id,
-          firstName: player.first_name,
-          lastName: player.last_name,
+          name: player.name,
+          position: player.position,
           country: player.country,
           league: player.league,
           dateOfBirth: player.date_of_birth,
+          value: player.value,
+          description: player.description,
           imgPath: player.img
         });
       } else {
@@ -72,58 +77,26 @@ router.get("/api/players/:id", async (req, res) => {
       res.status(500).send({ error: 'Failed to get player' });
     }
   });
-  
-  // Create a player
+// Create a player
 router.post("/api/players", upload.single("img"), async (req, res) => {
-    const { firstName, lastName, country, dateOfBirth, league } = req.body;
-    const imgPath = req.file ? req.file.filename : '/favicon/favicon.png';
-
-  
-    try {
-       
-      // Save the player information to the database
-      const result = await db.execute(
-        'INSERT INTO players (first_name, last_name, country, date_of_birth, league, img) VALUES (?, ?, ?, ?, ?, ?)',
-        [firstName, lastName, country, dateOfBirth, league, imgPath]
-      );
-    
-      res.status(201).send({ message: `Player ${firstName} created`});
-    } catch (error) {
-      console.error('Failed to create player:', error);
-      res.status(500).send({ error: 'Failed to create player' });
-    }
-  });
-
-  // Update a player by ID
-router.put("/api/players/:id", upload.single("img"), async (req, res) => {
-  const playerId = req.params.id;
-  const { firstName, lastName, country, dateOfBirth, league } = req.body;
-  const imgPath = req.file ? req.file.filename : null;
+  const { name, position, country, dateOfBirth, league, value, description } = req.body;
+  const imgPath = req.file ? req.file.filename : 'img/default.png';
 
   try {
-    // Get the previous image path of the player
-    const [prevPlayer] = await db.execute('SELECT img FROM players WHERE id = ?', [playerId]);
-    const prevImgPath = prevPlayer[0].img;
-
-    // Update the player information in the database
+    // Save the player information to the database
     const result = await db.execute(
-      'UPDATE players SET first_name = ?, last_name = ?, country = ?, date_of_birth = ?, league = ?, img = ? WHERE id = ?',
-      [firstName, lastName, country, dateOfBirth, league, imgPath || prevImgPath, playerId]
+      'INSERT INTO players (name, position, country, date_of_birth, league, value, description, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [name, position, country, dateOfBirth, league, value, description, imgPath]
     );
 
-    // Delete the previous image if a new image is uploaded
-    if (imgPath && prevImgPath) {
-      const imagePath = `../client/public', prevImgPath${prevImgPath}`;
-      fs.unlinkSync(imagePath);
-    }
-
-    res.status(200).send({ message: `Player with ID ${playerId} updated` });
+    res.status(201).send({ message: `Player ${name} created` });
   } catch (error) {
-    console.error('Failed to update player:', error);
-    res.status(500).send({ error: 'Failed to update player' });
+    console.error('Failed to create player:', error);
+    res.status(500).send({ error: 'Failed to create player' });
   }
 });
-  
+
+ 
 
 // Delete a player by ID
 router.delete("/api/players/:id", async (req, res) => {
@@ -134,12 +107,12 @@ router.delete("/api/players/:id", async (req, res) => {
       const [player] = await db.execute('SELECT img FROM players WHERE id = ?', [playerId]);
       const imgPath = player[0].img;
   
-      if (imgPath  && imgPath !== '/favicon/favicon.png') {
+      if (imgPath  && imgPath !== '/img/default.png') {
         const imagePath = `../client/public/${imgPath}`;
         fs.unlinkSync(imagePath);
       }
   
-      const result = await db.execute('DELETE FROM players WHERE id = ?', [playerId]);
+       await db.execute('DELETE FROM players WHERE id = ?', [playerId]);
   
       res.status(200).send({ message: `Player with ID ${playerId} deleted` });
     } catch (error) {

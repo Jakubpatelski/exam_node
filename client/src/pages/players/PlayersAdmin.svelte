@@ -55,12 +55,15 @@
     <div class="playersCont">
         {#each players as player}
         <div class="player">
-            <img src="/public/{player.imgPath}" alt="">
-            <p>First Name: {player.firstName}</p>
-            <p>Last Name: {player.lastName}</p>
+            <img src="/{player.imgPath}" alt="">
+            <p>First Name: {player.name}</p>
+            <p>Position: {player.position}</p>
             <p>Country: {player.country}</p>
             <p>Lague: {player.league}</p>
             <p>Date of birth: {player.dateOfBirth}</p>
+            <p>Market Value: {player.value}</p>
+
+            <p>TalentSpotter: {player.description}</p>
             <button class="delete-button" on:click={() => deletePlayer(player.id)}>Delete Player</button>
         </div>
         {/each}

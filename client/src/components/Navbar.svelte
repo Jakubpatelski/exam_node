@@ -34,15 +34,14 @@
     <nav>
         <div class="nav_text" id="notes">
             <Link to="/home">Home</Link>
+            <Link to="/players">Players</Link>
             <Link to="/contact">Contact</Link>
         </div>
-       
-        {#if  $user.message.admin}
-        <Link to="/admin"><button class="btn admin">Admin Panel</button>
-        </Link>
 
+        {#if  $user.message.admin}
+        <Link to="/admin/users"><button class="btn admin">Admin Panel</button>
+        </Link>
         {/if}
-        <!-- <Link to="/contact"><button class="logout-button">Logout</button></Link> -->
         <button on:click={logout} class="btn logout">Logout</button>
 
     </nav>
@@ -53,11 +52,6 @@
         box-sizing: border-box;
     }
 
-    body {
-    margin: 0;
-    font-family: Inter, sans-serif;
-    height: 100vh;
-    }
 
     nav {
         display: flex;
@@ -97,6 +91,11 @@
 
     .logout:hover {
         background-color: #c82333;
+    }
+
+    .account {
+        background-color: darkgray;
+        margin-right: 20px;
     }
 
     /* Define the style for the no-underline class */

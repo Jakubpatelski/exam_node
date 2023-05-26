@@ -62,6 +62,9 @@ app.use(contactRouter)
 import playerRouter from "./routers/playersRouter.js"
 app.use(playerRouter)
 
+import reviews from "./routers/reviewsRouter.js"
+app.use(reviews)
+
 
 
 const PORT = 8080;

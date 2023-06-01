@@ -24,7 +24,9 @@
             if (response.ok) {
             const result = await response.json();
             console.log('Player created:', result);
-            toast.success(`Player was created`)
+            toast.success(`Player was created`);
+            form.reset(); // Reset the form fields
+
             } else {
               toast.error('Error');
           }
@@ -41,8 +43,8 @@
         <h4>Player Form</h4>
         <form on:submit={addPlayer} enctype="multipart/form-data">
           <div>
-            <label for="firstName">Name:</label>
-            <input type="text" id="name" name="firstName" required bind:value={formData.name}>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required bind:value={formData.name}>
           </div>
           <div>
             <label for="position">Position:</label>
@@ -59,6 +61,14 @@
           <div>
             <label for="league">League:</label>
             <input type="text" id="league" name="league" bind:value={formData.league}>
+          </div>
+          <div>
+            <label for="value">Value ($):</label>
+            <input type="text" id="value" name="value" bind:value={formData.value}>
+          </div>
+          <div>
+            <label for="description">Description:</label>
+            <input type="description" id="description" name="description" bind:value={formData.description}>
           </div>
           <div>
             <label for="img">Image:</label>

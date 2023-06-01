@@ -1,85 +1,107 @@
 <script>
     import { onMount } from 'svelte';
     import Navbar from '../../components/Navbar.svelte';
-    import { user } from '../../stores/userStore';
     import Modal from '../../components/Modal.svelte';
     import toast, { Toaster } from 'svelte-french-toast';
 
 
-     let modal;
+    let modal;
   
-    let userID = $user.message.id
     let players = [];
     let selectedPlayer = null;
-    let commentText = '';
+    let country = '';
+
 
   
-    // Fetch the player data from the server
     export async function fetchPlayers() {
       const response = await fetch('http://localhost:8080/api/players');
       const { data } = await response.json();
-      players = data.map(player => ({
-        ...player,
-        comments: [] // Initialize an empty array for comments
-      }));
+      players = [];
+      players = data;
+    }
 
-      console.log(players)
-      // Fetch comments for each player
-      await players.map(fetchPlayerComments);
+
+    export async function fetchPlayersByCountry(country){
+    
+            const resposne = await fetch(`http://localhost:8080/api/players/country/${country}`);
+            
+            if(resposne.ok){
+                const { data } = await resposne.json();
+                players = [];
+                players = data;
+            } else {
+                toast.error(`Player form country: ${country} not found`)
+            }
+    }
+
+    export async function fetchPlayersByValueAsc(){
+        const response = await fetch('http://localhost:8080/api/players/value/value-ascending');
+        const { data } = await response.json();
+        players = [];
+        players = data;
+        console.log(players)
+
+    }
+
+    export async function fetchPlayersByValueDesc(){
+        const response = await fetch('http://localhost:8080/api/players/value/value-descending');
+        const { data } = await response.json();
+        players = [];
+        players = data;
+        console.log(players)
+
     }
   
-    async function fetchPlayerComments(player) {
-      const response = await fetch(`http://localhost:8080/api/players/${player.id}/reviews`);
-      const { data } = await response.json();
-      player.comments = data.map(review => review.comment);
-    }
+
   
     // Call the fetchPlayers function when the component is mounted
     onMount(fetchPlayers);
-  
+
     function selectPlayer(player) {
       selectedPlayer = player;
-      commentText = ''; // Reset the comment text when a new player is selected
     }
   
-    async function addComment() {
-      if (commentText) {
-        const response = await fetch('http://localhost:8080/api/reviews', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            player_id: selectedPlayer.id,
-            user_id: userID, 
-            comment: commentText
-          })
-        });
-  
-        if (response.ok) {
-          toast.success("comment added");
-          commentText = ''; // Clear the comment text after adding the comment
-          modal.hide();
-          fetchPlayers()
+  let selected = '';
 
-        
-        } else {
-          console.log('Failed to add comment');
-        }
-      }
+  function handleSelectChange() {
+
+    if (selected === 'highPrice') {
+
+        fetchPlayersByValueDesc();
+
+    } else if (selected === 'lowPrice') {
+
+        fetchPlayersByValueAsc();
+
+    } else if (selected === 'default') {
+
+        fetchPlayers();
     }
+}
+   
   </script>
   
   <main>
    
     <Navbar />
     <Toaster />
-  
+  <div>
+    <input type="text" placeholder="Search by country" bind:value={country} />
+    <button on:click={() => fetchPlayersByCountry(country)}>Search</button>
+
+    <label for="sort">sort by</label>
+    <select name="sort"  bind:value={selected} on:change={handleSelectChange}>
+      <option value="default">Default</option>
+      <option value="lowPrice">Price: Low to High</option>
+      <option value="highPrice">Price: High to Low</option>
+    </select>
+  </div>
+
   <div class="playersCont">
     {#each players as player}
     <div class="player">
       <img src="/{player.imgPath}" alt="">
-      <p>First Name: {player.firstName}</p>
+      <p>Name: {player.name}</p>
       <p>Last Name: {player.lastName}</p>
       <p>Country: {player.country}</p>
       <p>League: {player.league}</p>
@@ -95,45 +117,16 @@
     <div class="player-details">
       <img src="/{selectedPlayer.imgPath}" alt="">
       <p>Name: {selectedPlayer.name}</p>
-      <p>Position: {selectPlayer.position}</p>
+      <p>Position: {selectedPlayer.position}</p>
       <p>Country: {selectedPlayer.country}</p>
       <p>League: {selectedPlayer.league}</p>
       <p>Date of Birth: {selectedPlayer.dateOfBirth}</p>
-      <p>Market ValueL {selectPlayer.value}</p>
+      <p>Market Value: {selectedPlayer.value} $</p>
       <p>TalentSpotter:  {selectedPlayer.description}</p>
-      <textarea bind:value={commentText}></textarea>
-      <button on:click={addComment}>Add Comment</button>
-      <fieldset>
-        <legend>Comments</legend> 
-
-        <div class="comments">
-            {#each selectedPlayer.comments as comment}
-            <p>{comment}</p>
-            {/each}
-        </div>
-    </fieldset>
     </div>
     {/if}
   </Modal>
-      <!-- <Modal bind:this={modal}>
-      
-      </Modal>
 
-      {#if selectedPlayer === player}
-      <div class="player-details">
-        <h4>Comments</h4>
-        <textarea bind:value={commentText}></textarea>
-        <button on:click={addComment}>Add Comment</button>
-        <div class="comments">
-          {#each player.comments as comment}
-          <p>{comment}</p>
-          {/each}
-        </div>
-      </div>
-      {/if}
-    </div>
-    {/each}
-  </div> -->
 </main>
   
   <style>
@@ -154,11 +147,20 @@
     }
   
     .player-button {
-      margin-top: 10px;
+    background-color: #4CAF50;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 10px 10px;
+    font-size: 0.9em;
+    font-weight: 500;
+    cursor: pointer;
+    color: white;
     }
 
     img {
       width: 80%;
+      height: 200px;
     }
 
      .player-details img {
@@ -167,53 +169,10 @@
         margin-bottom: 20px;
         border-radius: 10px;
     }
-
-
-    /* .player-details {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    } */ 
-
-    .player-details p {
-        margin: 0;
-        line-height: 2; /* Adjust the line height as desired */
+    .player-button:hover{
+        background-color: #145715;
     }
 
-    .comments {
-     display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-      gap: 20px;
-    }
 
-    
-
-  .player-details .comments p {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-  }
-
-  textarea {
-    width: 80%;
-    height: 100px;
-    margin-bottom: 10px;
-    padding: 5px;
-    border-radius: 5px;
-  }
-
-  .player-details button {
-    padding: 8px 16px;
-    font-size: 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 10px;
-    margin: 15px;
-  }
 
 </style>

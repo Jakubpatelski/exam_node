@@ -15,7 +15,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false, 
     saveUninitialized: true,
-    cookie: { secure: false } //i run on http so should be false
+    cookie: { secure: false } 
 }));
 app.use(cors({
     credentials: true,
@@ -62,8 +62,7 @@ app.use(contactRouter)
 import playerRouter from "./routers/playersRouter.js"
 app.use(playerRouter)
 
-import reviews from "./routers/reviewsRouter.js"
-app.use(reviews)
+
 
 
 

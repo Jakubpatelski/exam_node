@@ -34,21 +34,10 @@ CREATE TABLE players (
     country VARCHAR(255),
     date_of_birth DATE,
     league VARCHAR(255),
-    value VARCHAR(255),
+    value DECIMAL(12, 2),
     description VARCHAR(255),
     img VARCHAR(255)
   );
 `);
 
 
-db.execute(`
-CREATE TABLE IF NOT EXISTS reviews (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    player_id INT NOT NULL,
-    user_id INT NOT NULL,
-    comment TEXT,
-    FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-  );
-`)
- 

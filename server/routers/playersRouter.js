@@ -73,10 +73,115 @@ router.get("/api/players/:id", async (req, res) => {
         res.status(404).send({ error: `Player with ID ${playerId} not found` });
       }
     } catch (error) {
-      console.error('Failed to get player:', error);
       res.status(500).send({ error: 'Failed to get player' });
     }
   });
+
+ // Get players by country
+ router.get("/api/players/country/:country", async (req, res) => {
+  const country = req.params.country;
+
+  try {
+    const [result] = await db.execute(
+      'SELECT id, name, position, country, date_of_birth, league, value, description, img FROM players WHERE country = ?',
+      [country]
+    );
+
+    if (result.length > 0) {
+      const players = result.map((player) => {
+        // Convert date to the "YYYY-MM-DD" format
+     const dateOfBirth = player.date_of_birth.toISOString().split("T")[0];
+      return {
+        id: player.id,
+        name: player.name,
+        position: player.position,
+        country: player.country,
+        league: player.league,
+        value: player.value,
+        description: player.description,
+        dateOfBirth: dateOfBirth,
+        imgPath: player.img
+      };
+    });
+  
+    res.send({ data: players });
+    } else {
+      res.status(404).send({ error: `No players found from ${country}` });
+    }
+  } catch (error) {
+    res.status(500).send({ error: 'Failed to get players by country' });
+  }
+});
+
+// Fetch players by value in descending order
+router.get("/api/players/value/value-descending", async (req, res) => {
+  try {
+    const [result] = await db.execute(
+      'SELECT id, name, position, country, date_of_birth, league, value, description, img FROM players ORDER BY value DESC'
+    );
+
+    if (result.length > 0) {
+      const players = result.map((player) => {
+        // Convert date to the "YYYY-MM-DD" format
+        const dateOfBirth = player.date_of_birth.toISOString().split("T")[0];
+        return {
+          id: player.id,
+          name: player.name,
+          position: player.position,
+          country: player.country,
+          league: player.league,
+          value: player.value,
+          description: player.description,
+          dateOfBirth: dateOfBirth,
+          imgPath: player.img
+        };
+      });
+
+      res.send({ data: players });
+
+    } else {
+      res.status(404).send({ error: 'No players found' });
+    }
+  } catch (error) {
+    res.status(500).send({ error: 'Failed to get players' });
+  }
+});
+
+
+// Fetch players by value in ascending order
+router.get("/api/players/value/value-ascending", async (req, res) => {
+  try {
+    const [result] = await db.execute(
+      'SELECT id, name, position, country, date_of_birth, league, value, description, img FROM players ORDER BY value ASC'
+    );
+
+    if (result.length > 0) {
+      const players = result.map((player) => {
+        // Convert date to the "YYYY-MM-DD" format
+        const dateOfBirth = player.date_of_birth.toISOString().split("T")[0];
+        return {
+          id: player.id,
+          name: player.name,
+          position: player.position,
+          country: player.country,
+          league: player.league,
+          value: player.value,
+          description: player.description,
+          dateOfBirth: dateOfBirth,
+          imgPath: player.img
+        };
+      });
+
+      res.send({ data: players });
+    } else {
+      res.status(404).send({ error: 'No players found' });
+    }
+  } catch (error) {
+    res.status(500).send({ error: 'Failed to get players' });
+  }
+});
+
+
 // Create a player
 router.post("/api/players", upload.single("img"), async (req, res) => {
   const { name, position, country, dateOfBirth, league, value, description } = req.body;
@@ -87,16 +192,15 @@ router.post("/api/players", upload.single("img"), async (req, res) => {
     const result = await db.execute(
       'INSERT INTO players (name, position, country, date_of_birth, league, value, description, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
       [name, position, country, dateOfBirth, league, value, description, imgPath]
-    );
+    )
 
     res.status(201).send({ message: `Player ${name} created` });
   } catch (error) {
-    console.error('Failed to create player:', error);
     res.status(500).send({ error: 'Failed to create player' });
   }
 });
 
- 
+
 
 // Delete a player by ID
 router.delete("/api/players/:id", async (req, res) => {
@@ -107,7 +211,8 @@ router.delete("/api/players/:id", async (req, res) => {
       const [player] = await db.execute('SELECT img FROM players WHERE id = ?', [playerId]);
       const imgPath = player[0].img;
   
-      if (imgPath  && imgPath !== '/img/default.png') {
+      console.log(imgPath)
+      if (imgPath && imgPath !== 'img/default.png') {
         const imagePath = `../client/public/${imgPath}`;
         fs.unlinkSync(imagePath);
       }
@@ -116,7 +221,6 @@ router.delete("/api/players/:id", async (req, res) => {
   
       res.status(200).send({ message: `Player with ID ${playerId} deleted` });
     } catch (error) {
-      console.error('Failed to delete player:', error);
       res.status(500).send({ error: 'Failed to delete player' });
     }
   });

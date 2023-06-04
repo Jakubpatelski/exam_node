@@ -11,23 +11,24 @@
    
     async function logout()  {
 
-           const response = await fetch("http://localhost:8080/logout", {
+        const response = await fetch("http://localhost:8080/logout", {
             method: 'POST',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
-                }
-            })
-            if(response.ok){
+            }
+        });
+        
+        if(response.ok){
             navigate('/');
             user.set(null);
             localStorage.removeItem("user");  
             toast('See You Later!', {
             icon: '👋',});
-          
-            } else {
+        
+        } else {
             toast.error("error")
-            }
+        }
     }
 
 

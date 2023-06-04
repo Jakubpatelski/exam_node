@@ -9,29 +9,56 @@ import rateLimit from 'express-rate-limit'
 const app = express();
 app.use(express.json());
 
+// read .env file
 dotnev.config();
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false, 
     saveUninitialized: true,
-    cookie: { secure: false } 
+    cookie: { secure: false } //true runs on https so should be false
 }));
+
 app.use(cors({
     credentials: true,
     origin: true
 }));
 
+
+
+// websocket
+import http from "http";
+const server = http.createServer(app);
+
+import { Server } from "socket.io";
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["*"]
+    }
+});
+
+io.on("connection", (socket) => {
+
+    socket.on("a client choose a color", (data) => {
+        io.emit("a new color just dropped", data);
+    });
+
+});
+
+
 const limiter = rateLimit({
-	windowMs: 30 * 60 * 1000, // 30 minutes
-	max: 10, // Limit each IP to 10 requests per `window` (here, per 15 minutes)
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 20, // Limit each IP to 20 requests per `window` (here, per 15 minutes)
 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
+
+
 app.use("/login", limiter);
 
 
-
+// check if the user is authenticated
 export function isAuthenticated (req, res, next) {
     if (req.session && req.session.user) {
         next();
@@ -64,15 +91,9 @@ app.use(playerRouter)
 
 
 
+const PORT = process.env.PORT || 8080;
+server.listen(PORT, () => console.log("Server is running in port", PORT));
 
-
-const PORT = 8080;
-app.listen(PORT, (error) => {
-    if(error){
-        console.log(error);
-    }
-    console.log("Server is ruuning on port ", PORT);
-})
 
 
 

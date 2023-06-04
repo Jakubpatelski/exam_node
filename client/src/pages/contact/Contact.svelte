@@ -1,6 +1,7 @@
 <script>
     import Navbar from "../../components/Navbar.svelte";
-    import Toastr from "toastr";
+    import toast, { Toaster } from 'svelte-french-toast';
+
 
 
     let email= "";
@@ -8,27 +9,28 @@
     let text = "";
     async function handleContact(){
         const data = { email, subject, text}
+
         try{
             const response = await fetch('http://localhost:8080/contact', {
-                method: 'POSt',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
             });
-            if (response.ok) {
-                Toastr.info("email sent")
-            } else {
-                const error = await response.json();
-                Toastr.error(error.message);
-            }
-        } catch(error) {
-        Toastr.error(`Unable to send mail. Try again later. ${error}`);
 
+            if (response.ok) {
+              toast.success("Email was sent");
+          }
+       }
+        catch(error) {
+              toast.error(error);
         }
     }
 </script>
 <Navbar />
+<Toaster />
+
 
 <form on:submit|preventDefault={handleContact}  class="contact-form">
     <label for="email" >Email:</label>

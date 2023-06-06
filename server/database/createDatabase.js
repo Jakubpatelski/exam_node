@@ -6,9 +6,10 @@ const isDeleteMode = process.argv.findIndex((argument) => argument === "delete_m
 
 if (isDeleteMode) {
     
-    db.execute(`DROP TABlE if exists reviews`)
-    db.execute(`DROP TABLE if exists users;`);
+    db.execute(`DROP TABlE if exists users`)
     db.execute(`DROP TABLE if exists players`)
+    db.execute(`DROP TABLE if exists favorites;`);
+
 }
 
 db.execute(`
@@ -27,7 +28,7 @@ db.execute(`INSERT INTO users(email, username, password, admin)
 
 
 db.execute(`
-CREATE TABLE players (
+CREATE TABLE IF NOT EXISTS players (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
     position VARCHAR(255),
@@ -39,5 +40,15 @@ CREATE TABLE players (
     img VARCHAR(255)
   );
 `);
+
+
+db.execute(`
+CREATE TABLE IF NOT EXISTS favorites (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  player_id INT,
+  FOREIGN KEY (user_id) REFERENCES users (id),
+  FOREIGN KEY (player_id) REFERENCES players (id)
+);`)
 
 

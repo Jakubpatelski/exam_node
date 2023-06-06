@@ -22,8 +22,6 @@
             });
 
             if (response.ok) {
-            const result = await response.json();
-            console.log('Player created:', result);
             toast.success(`Player was created`);
             form.reset(); // Reset the form fields
 
@@ -32,7 +30,6 @@
           }
         } catch (error) {
           toast.error(error)
-            // Handle error response
         }
 }
 

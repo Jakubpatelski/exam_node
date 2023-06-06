@@ -17,16 +17,6 @@ user.subscribe(value => {
 
 
 
-
-// // Create the writable store for colorsList
-// export const colorsList = writable([]);
-
-// // Subscribe to the changes in colorsList store
-// colorsList.subscribe(value => {
-//   // Update the localStorage with the new value of colorsList
-//   localStorage.setItem('colorsList', JSON.stringify(value));
-// });
-
 // Get the stored data from localStorage
 const storedColorsList = localStorage.getItem('colorsList');
 const initialColorsList = storedColorsList !== null ? JSON.parse(storedColorsList) : [];

@@ -201,6 +201,45 @@ router.post("/api/players", upload.single("img"), async (req, res) => {
 });
 
 
+// Edit a player
+router.put("/api/players/:id", upload.single("img"), async (req, res) => {
+  const playerId = req.params.id;
+  const { name, position, country, dateOfBirth, league, value, description } = req.body;
+
+  try {
+    // Check if the player exists
+    const [existingPlayer] = await db.execute(
+      'SELECT * FROM players WHERE id = ?',
+      [playerId]
+    );
+
+    if (existingPlayer.length === 0) {
+      return res.status(404).send({ error: 'Player not found' });
+    }
+
+    // Get the existing player's image path
+    const existingImage = existingPlayer[0].img;
+
+    // Determine the new image path
+    const imgPath = req.file ? req.file.filename : existingImage;
+
+    // Update the player information in the database
+    await db.execute(
+      'UPDATE players SET name = ?, position = ?, country = ?, date_of_birth = ?, league = ?, value = ?, description = ?, img = ? WHERE id = ?',
+      [name, position, country, dateOfBirth, league, value, description, imgPath, playerId]
+    );
+
+    res.status(200).send({ message: `Player ${name} updated` });
+  } catch (error) {
+    res.status(500).send({ error: 'Failed to update player' });
+  }
+});
+
+
+
+
+
+
 
 // Delete a player by ID
 router.delete("/api/players/:id", async (req, res) => {
@@ -211,7 +250,6 @@ router.delete("/api/players/:id", async (req, res) => {
       const [player] = await db.execute('SELECT img FROM players WHERE id = ?', [playerId]);
       const imgPath = player[0].img;
   
-      console.log(imgPath)
       if (imgPath && imgPath !== 'img/default.png') {
         const imagePath = `../client/public/${imgPath}`;
         fs.unlinkSync(imagePath);
@@ -225,5 +263,74 @@ router.delete("/api/players/:id", async (req, res) => {
     }
   });
   
+
+  //new
+// Fetch favorite players for a user
+router.get("/api/users/:userId/favourites", async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const [result] = await db.execute(
+      'SELECT p.id, p.name, p.position, p.country, p.date_of_birth, p.league, p.value, p.description, p.img FROM favorites f INNER JOIN players p ON f.player_id = p.id WHERE f.user_id = ?',
+      [userId]
+    );
+
+    const favoritePlayers = result.map((player) => {
+      // Convert date to the "YYYY-MM-DD" format
+      const dateOfBirth = player.date_of_birth.toISOString().split("T")[0];
+      return {
+        id: player.id,
+        name: player.name,
+        position: player.position,
+        country: player.country,
+        league: player.league,
+        value: player.value,
+        description: player.description,
+        dateOfBirth: dateOfBirth,
+        imgPath: player.img
+      };
+    });
+    
+    res.send({ data: favoritePlayers });
+  } catch (error) {
+    res.status(500).send({ error: 'Failed to get favorite players' });
+  }
+});
+
+
+// Add a player to favorites for a user
+router.post("/api/users/:userId/favourites/:playerId", async (req, res) => {
+  const userId = req.params.userId;
+  const playerId = req.params.playerId;
+
+  try {
+    await db.execute(
+      'INSERT INTO favorites (user_id, player_id) VALUES (?, ?)',
+      [userId, playerId]
+    );
+
+    res.send({ success: true });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Failed to add player to favorites' });
+  }
+});
+
+// Remove a player from favorites for a user
+router.delete("/api/users/:userId/favourites/:playerId", async (req, res) => {
+  const userId = req.params.userId;
+  const playerId = req.params.playerId;
+
+  try {
+    await db.execute(
+      'DELETE FROM favorites WHERE user_id = ? AND player_id = ?',
+      [userId, playerId]
+    );
+
+    res.send({ success: true });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Failed to remove player from favorites' });
+  }
+});
+
   export default router;
   

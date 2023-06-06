@@ -2,6 +2,8 @@
     import { Router, Link, useNavigate } from 'svelte-navigator'
     import { user } from '../stores/userStore';
     import toast, { Toaster } from 'svelte-french-toast';
+    import { colorsList } from "../stores/userStore";
+
 
 
 
@@ -30,7 +32,6 @@
         }
     }
 
-   import { colorsList } from "../stores/userStore";
     import { onMount, afterUpdate } from "svelte";
     import io from "socket.io-client";
   

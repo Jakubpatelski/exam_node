@@ -19,7 +19,7 @@ router.post("/login", async (req, res) => {
         const userData = userFound[0];
         // Check if password is the same
 
-        const isSamePassword = bcrypt.compare(password, userData.password)
+        const isSamePassword = bcrypt.compare(password, userData.password);
 
 
         if (isSamePassword) {

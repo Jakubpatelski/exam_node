@@ -85,9 +85,10 @@ import logoutRouter from "./routers/logoutRouter.js";
 app.use(logoutRouter);
 
 import contactRouter from "./routers/contactRouter.js"
-app.use(contactRouter)
+app.use(contactRouter);
 import playerRouter from "./routers/playersRouter.js"
-app.use(playerRouter)
+app.use(playerRouter);
+
 
 
 

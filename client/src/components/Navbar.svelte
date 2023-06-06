@@ -70,7 +70,7 @@
             <Link to="/players">Players</Link>
             <Link to="/contact">Contact</Link>
             <input type="color" bind:value={chosenColor}>
-            <button on:click={handleColorChosen}>Send Color</button>
+            <button on:click={handleColorChosen}>Set Color</button>
         </div>
 
         {#if  $user.message.admin}

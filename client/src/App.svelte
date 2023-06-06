@@ -8,6 +8,7 @@
   import PlayersAdmin from './pages/players/PlayersAdmin.svelte';
   import Signup from './pages/signup/Signup.svelte';
   import PlayersUser from './pages/players/PlayersUser.svelte';
+  import PrivateRouteGuard from './components/PrivateRouteGuard.svelte';
 
 
 </script>
@@ -16,13 +17,13 @@
       <Route path="/" >
         <Login />
        </Route>
-      <PrivateRoute path="/home" let:location>
+      <PrivateRoute path="/home" >
         <Home />
       </PrivateRoute>
-      <PrivateRoute path="/contact" let:location>
+      <PrivateRoute path="/contact">
         <Contact />
       </PrivateRoute>  
-      <PrivateRoute path="/admin/users" let:location>
+      <PrivateRoute path="/admin/users">
         <Users />
       </PrivateRoute>
       <PrivateRoute path="/admin/players">

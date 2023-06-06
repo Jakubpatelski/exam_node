@@ -154,9 +154,11 @@
   <style>
 
 
-    img {
-      width: 90%;
-    } 
+img {
+      width: 80%;
+      height: 200px;
+      border-radius: 10px;
+    }
     .playersCont {
     margin: 20px;
     display: flex;
@@ -165,7 +167,7 @@
   }
   
   .player {
-    width: 200px;
+    width: 220px;
     margin: 10px;
     padding: 10px;
     border: 1px solid #ccc;
@@ -205,7 +207,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
-  }
+  } 
 
   #sub {
     background-color: #4CAF50;

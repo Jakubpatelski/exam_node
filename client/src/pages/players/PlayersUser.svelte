@@ -59,14 +59,13 @@
 }
 
     async function addToFavorites(player) {
-      console.log(favoritePlayers);
       const check = favoritePlayers.find(p => p.id === player);
 
       if (check) {
         toast.error('Player already added to favorites');
       return;
   }
-    const userId = $user.message.id;
+      const userId = $user.message.id;
     
       const response = await fetch(`http://localhost:8080/api/users/${userId}/favourites/${player}`, {
         method: 'POST'
@@ -88,8 +87,7 @@ async function deleteFromFavorites(player){
         toast.success('Player deleted from favorites');
         fetchPlayers();
         fetchfavouritiesPlayers();
-      } 
-
+      }
 }
 
    
@@ -120,7 +118,9 @@ async function deleteFromFavorites(player){
         fetchPlayers();
 
     } else if (selected === 'myFavourites'){
+
       fetchfavouritiesPlayers();
+
     }
 }
    
@@ -160,7 +160,7 @@ async function deleteFromFavorites(player){
           <p>League: {player.league}</p>
           <p>Market Value: {player.value}</p>
           <p>Date of Birth: {player.dateOfBirth}</p>
-          <button class="player-x" on:click={() => { deleteFromFavorites(player.id) }}>Remove</button>
+          <button class="player-button remove" on:click={() => { deleteFromFavorites(player.id) }}>Remove</button>
           <button class="player-button" on:click={() => { selectPlayer(player); modal.show(); }}>See more info</button>
         </div>
       {/each}
@@ -175,9 +175,9 @@ async function deleteFromFavorites(player){
           <p>Market Value: {player.value}</p>
           <p>Date of Birth: {player.dateOfBirth}</p>
           {#if favoritePlayers.find(p => p.id === player.id)}
-            <button class="player-x" on:click={() => { deleteFromFavorites(player.id) }}>Remove</button>
+            <button class="player-button remove" on:click={() => { deleteFromFavorites(player.id) }}>Remove</button>
           {:else}
-            <button class="player-x" on:click={() => { addToFavorites(player.id) }}>Add</button>
+            <button class="player-button add" on:click={() => { addToFavorites(player.id) }}>Add</button>
           {/if}
           <button class="player-button" on:click={() => { selectPlayer(player); modal.show(); }}>See more info</button>
         </div>
@@ -215,7 +215,7 @@ async function deleteFromFavorites(player){
     }
   
     .player {
-      width: 200px;
+      width: 220px;
       margin: 10px;
       padding: 10px;
       border: 1px solid #ccc;
@@ -300,12 +300,12 @@ async function deleteFromFavorites(player){
     }
 
   .modal-content {
-  background-color: #fff;
-  max-width: 300px;
-  margin: 0 auto;
-  padding: 30px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .player-image {
@@ -323,6 +323,9 @@ async function deleteFromFavorites(player){
 
 .player-details p {
   margin: 5px 0;
+}
+button.remove{
+  background-color: red;
 }
 
 

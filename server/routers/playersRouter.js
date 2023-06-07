@@ -264,7 +264,6 @@ router.delete("/api/players/:id", async (req, res) => {
   });
   
 
-  //new
 // Fetch favorite players for a user
 router.get("/api/users/:userId/favourites", async (req, res) => {
   const userId = req.params.userId;

@@ -16,10 +16,11 @@ router.post("/login", async (req, res) => {
      const [userFound] = await db.execute('SELECT * FROM users WHERE username = ?', [username]);
 
      if (userFound.length > 0){
+        
         const userData = userFound[0];
-        // Check if password is the same
 
-        const isSamePassword = bcrypt.compare(password, userData.password);
+        // Check if password is the same
+       const isSamePassword = bcrypt.compare(password, userData.password);
 
 
         if (isSamePassword) {

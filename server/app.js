@@ -7,6 +7,9 @@ import rateLimit from 'express-rate-limit'
 
 
 const app = express();
+
+
+// Middleware to parse JSON request bodies
 app.use(express.json());
 
 // read .env file
@@ -28,10 +31,10 @@ app.use(cors({
 
 // websocket
 import http from "http";
-const server = http.createServer(app);
+const server = http.createServer(app); ////HTTP server will use Express to handle incoming HTTP requests
 
 import { Server } from "socket.io";
-const io = new Server(server, {
+const io = new Server(server, { ///socket.io server will use the same HTTP server to handle incoming connections
     cors: {
         origin: "*",
         methods: ["*"]

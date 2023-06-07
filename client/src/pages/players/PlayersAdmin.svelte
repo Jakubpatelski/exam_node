@@ -15,12 +15,6 @@
     function selectPlayer(player) {
       selectedPlayer = player;
     }
-
-
-    function handleImageChange(event) {
-  const file = event.target.files[0];
-  selectedPlayer.image = file;
-}
   
   // Fetch the player data from the server
     export async function fetchPlayers() {

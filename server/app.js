@@ -5,11 +5,10 @@ import session from "express-session";
 import rateLimit from 'express-rate-limit'
 
 
-
 const app = express();
 
 
-// Middleware to parse JSON request bodies
+// middleware to parse JSON request bodies
 app.use(express.json());
 
 // read .env file
@@ -41,9 +40,12 @@ const io = new Server(server, { ///socket.io server will use the same HTTP serve
     }
 });
 
+// handle client connections
 io.on("connection", (socket) => {
 
+  // handle event when a client chooses a color
     socket.on("a client choose a color", (data) => {
+        // Broadcast the event to all connected clients
         io.emit("a new color just dropped", data);
     });
 

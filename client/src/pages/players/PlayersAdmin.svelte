@@ -3,6 +3,15 @@
     import AddPlayer from '../../components/AddPlayer.svelte';
     import toast, { Toaster } from 'svelte-french-toast';
     import Modal from '../../components/Modal.svelte';
+    import { useNavigate } from "svelte-navigator";
+    import { user } from '../../stores/userStore';
+
+
+
+    const navigate = useNavigate();
+    if(!$user.message.admin) {
+        navigate('/home')
+    }
 
     let modal;
 
@@ -20,9 +29,7 @@
     export async function fetchPlayers() {
       const response = await fetch('http://localhost:8080/api/players');
       const { data } = await response.json();
-      players = data;
-      console.log(players);
-   
+      players = data;   
     }
   
     // Call the fetchPlayers function when the component is mounted
@@ -51,26 +58,23 @@
     }
 
 
-    async function updatePlayer(event) {
-    event.preventDefault(); // Prevent default form submission
+    async function updatePlayer() {      
+      const form =  document.querySelector('form');;
+      const formData = new FormData(form);
+      
+      try {
+        const response = await fetch(`http://localhost:8080/api/players/${selectedPlayer.id}`, {
+          method: 'PUT',
+          body: formData,
+        });
 
-    const form = event.target;
-    const formData = new FormData(form);
-    formData.append('id', selectedPlayer.id); // Append the player ID to the form data
-
-    try {
-      const response = await fetch(`http://localhost:8080/api/players/${selectedPlayer.id}`, {
-        method: 'PUT',
-        body: formData,
-      });
-
-      if (response.ok) {
-        toast.success('success');
-        fetchPlayers();
+        if (response.ok) {
+          toast.success('success');
+          fetchPlayers();
+        }
+      } catch (error) {
+          toast.error(error);
       }
-    } catch (error) {
-     toast.error(error);
-    }
   }
 
 
@@ -107,7 +111,7 @@
       {#if selectedPlayer}
         <div class="modal-content">
           <div class="form-container">
-            <img src="{selectedPlayer.imgPath}" alt="" class="player-image">
+            <img src="/{selectedPlayer.imgPath}" alt="" class="player-image">
             <form on:submit={updatePlayer} enctype="multipart/form-data">
               <label for="edit-name">Name:</label>
               <input type="text" id="edit-name" name="name" bind:value={selectedPlayer.name}>

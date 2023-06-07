@@ -94,7 +94,7 @@ async function deleteFromFavorites(player){
   onMount(async () => {
     await fetchPlayers();
     await fetchfavouritiesPlayers();
-});
+  });
     
 
     function selectPlayer(player) {

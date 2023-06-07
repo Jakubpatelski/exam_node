@@ -1,7 +1,5 @@
 import { writable } from 'svelte/store';
 
-
-
 // Get the user data from local storage
 const storedData = localStorage.getItem('user');
 
@@ -15,14 +13,11 @@ user.subscribe(value => {
 });
 
 
-
-
 // Get the stored data from localStorage
 const storedColorsList = localStorage.getItem('colorsList');
-const initialColorsList = storedColorsList !== null ? JSON.parse(storedColorsList) : [];
 
-// Create the writable store for colorsList
-export const colorsList = writable(initialColorsList);
+// Initialize the user store with the stored data or empty array
+export const colorsList = writable(storedColorsList !== null ? JSON.parse(storedColorsList) : []);
 
 // Subscribe to the changes in colorsList store
 colorsList.subscribe(value => {

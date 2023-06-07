@@ -7,13 +7,11 @@
 
 
     let formData = {};
-    async function addPlayer(event) {
-        event.preventDefault(); // Prevent default form submission
-
+    async function addPlayer() {
+      
         const form = document.querySelector('form');
         const data = new FormData(form);
         formData = Object.fromEntries(data.entries());
-
 
         try {
             const response = await fetch('http://localhost:8080/api/players', {
